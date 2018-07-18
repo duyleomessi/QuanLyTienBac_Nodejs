@@ -6,6 +6,7 @@ moneyApi.use(bodyParser.json());
 
 var Money = require('../models/Money');
 
+// add activity
 moneyApi.post('/', (req, res, next) => {
     var newActivity = new Money({
         type: req.body.type,
@@ -24,5 +25,19 @@ moneyApi.post('/', (req, res, next) => {
         return res.status(200).json("Done");
     })
 })
+
+// get all activity
+moneyApi.get('/', (req, res, next) => {
+    Money.find({})
+        .exec((err, activities) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json("There were error while finding all activity");
+            }
+
+            return res.status(200).json(activities); 
+        })
+})
+
 
 module.exports = moneyApi;
