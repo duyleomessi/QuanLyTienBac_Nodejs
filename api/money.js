@@ -22,7 +22,7 @@ moneyApi.post('/', (req, res, next) => {
             return res.status(500).json("There were error while saving activity");
         } 
 
-        return res.status(200).json("Done");
+        return res.status(201).json("Done");
     })
 })
 
