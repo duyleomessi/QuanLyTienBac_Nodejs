@@ -29,7 +29,7 @@ moneyApi.post('/', (req, res, next) => {
 // get all activity
 moneyApi.get('/', (req, res, next) => {
     Money.find({})
-        .sort({year: -1, month: -1, day: -1})
+        .sort({year: -1, month: -1, day: -1, updated: -1})
         .exec((err, activities) => {
             if (err) {
                 console.log(err);
