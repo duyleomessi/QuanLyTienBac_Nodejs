@@ -34,7 +34,7 @@ userApi.post("/register", (req, res, next) => {
         if (err) {
           return res.status(500).json("There is error in creating new user");
         } else {
-          var token = jwt.sign({ id: user._id }, process.env.secret, {
+          var token = jwt.sign({ id: user._id }, process.env.SECRET, {
             expiresIn: 86400 // expires in 24 hours
           });
           res.status(200).json({ message: "User is created", token: token });
@@ -57,7 +57,7 @@ userApi.post("/login", (req, res, next) => {
     if (!bcrypt.compareSync(req.body.password, user.password)) {
       return res.status(401).json("Password is incorrect");
     } else {
-      var token = jwt.sign({ id: user._id }, process.env.secret, {
+      var token = jwt.sign({ id: user._id }, process.env.SECRET, {
         expiresIn: 86400 // expires in 24 hours
       });
       res
