@@ -5,9 +5,10 @@ moneyApi.use(bodyParser.urlencoded({ extended: false }));
 moneyApi.use(bodyParser.json());
 
 var Money = require('../models/Money');
+var verifyToken = require('../middleware/verifyToken');
 
 // add activity
-moneyApi.post('/', (req, res, next) => {
+moneyApi.post('/', verifyToken, (req, res, next) => {
     var newActivity = new Money({
         type: req.body.type,
         amount: req.body.amount,
@@ -27,7 +28,7 @@ moneyApi.post('/', (req, res, next) => {
 })
 
 // get all activity
-moneyApi.get('/', (req, res, next) => {
+moneyApi.get('/', verifyToken, (req, res, next) => {
     Money.find({})
         .sort({year: -1, month: -1, day: -1, updated: -1})
         .exec((err, activities) => {
