@@ -32,14 +32,14 @@ userApi.post("/register", (req, res, next) => {
     if (err) {
       return res
         .status(500)
-        .json("There is error in checking if email existed or not");
+        .json({message: "There is error in checking if email existed or not"});
     }
     if (result) {
-      return res.status(409).json("The email is already exist");
+      return res.status(409).json({message: "The email is already exist"});
     } else {
       newUser.save((err, user) => {
         if (err) {
-          return res.status(500).json("There is error in creating new user");
+          return res.status(500).json({message: err});
         } else {
           var token = jwt.sign({
             id: user._id
@@ -57,20 +57,25 @@ userApi.post("/register", (req, res, next) => {
 });
 
 userApi.post("/login", (req, res, next) => {
+  console.log(req.body.email);
   User.findOne({
     email: req.body.email
   }).exec((err, user) => {
     if (err) {
-      return res.status(500).json("There is error on finding email");
+      console.log(err);
+      return res.status(500).json({message: err});
     }
 
     if (!user) {
-      return res.status(404).json("The email is not found");
+      console.log('Email not found');
+      return res.status(404).json({message: "The email is not found"});
     }
 
     if (!bcrypt.compareSync(req.body.password, user.password)) {
-      return res.status(401).json("Password is incorrect");
+      console.log('Password is incorrect');
+      return res.status(401).json({message: "Password is incorrect"});
     } else {
+      console.log("login s")
       var token = jwt.sign({
         id: user._id
       }, process.env.SECRET, {
@@ -118,18 +123,16 @@ userApi.post('/activity', verifyToken, (req, res, next) => {
     User.findById(req.userId)
       .exec((err, user) => {
         if (err) {
-          return res.status(500).json("Error while finding user");
+          return res.status(500).json({message: err});
         }
         user.activities.push(activityId);
         user.save((err) => {
           if (err) {
-            return res.status(500).json("Error while saving activity");
+            return res.status(500).json({message: err});
           }
-          return res.status(201).json("Success to save activity");
+          return res.status(201).json({message: "Success to save activity"});
         })
-
       })
-
   })
 })
 

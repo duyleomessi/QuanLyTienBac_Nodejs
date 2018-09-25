@@ -20,10 +20,10 @@ moneyApi.post('/', verifyToken, (req, res, next) => {
     newActivity.save((err) => {
         if (err) {
             console.log(err);
-            return res.status(500).json("There were error while saving activity");
+            return res.status(500).json({message: err});
         } 
 
-        return res.status(201).json("Done");
+        return res.status(201).json({ message: "Done" });
     })
 })
 
@@ -34,7 +34,7 @@ moneyApi.get('/', verifyToken, (req, res, next) => {
         .exec((err, activities) => {
             if (err) {
                 console.log(err);
-                return res.status(500).json("There were error while finding all activity");
+                return res.status(500).json({message: err});
             }
 
             return res.status(200).json(activities); 
