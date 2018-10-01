@@ -97,7 +97,26 @@ userApi.get('/activities', verifyToken, (req, res, next) => {
     .exec((err, user) => {
       if (err) {
         return res.status(500).json({
-          message: "Error in getting activities of user"
+          message: err
+        });
+      }
+
+      return res.status(200).json(user.activities)
+    })
+})
+
+userApi.get('/activities/month/:id', verifyToken, (req, res, next) => {
+  const month = req.params.id;
+  console.log(req.userId);
+  User.findById(req.userId)
+    .populate({
+      path: 'activities',
+      match: { month: {$eq: month}}
+    })
+    .exec((err, user) => {
+      if (err) {
+        return res.status(500).json({
+          message: err
         });
       }
 
@@ -117,7 +136,7 @@ userApi.post('/activity', verifyToken, (req, res, next) => {
   newActivity.save((err, activity) => {
     if (err) {
       console.log(err);
-      return res.status(500).json("There were error while saving activity");
+      return res.status(500).json({message: err});
     } 
     var activityId = activity._id;
     User.findById(req.userId)
